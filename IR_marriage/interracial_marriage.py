@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from matplotlib import animation, rc
 import matplotlib.pyplot as plt
-#plt.style.use('rossidata')
+plt.style.use('rossidata')
 
 
 
@@ -16,15 +16,25 @@ def main():
 
     ### plotting
     plt.close('all')
-    fig, ax = plt.subplots(figsize=(6, 6))
-    ax.barh(dataS['class'], dataS['normalized'])
-    vals = ax.get_xticks()
+    fig, (ax, ax0) = plt.subplots(2, 1, figsize=(6, 12), sharey=True)
 
-    ax.set_xticklabels(['{:3.0f}%'.format(x * 100) for x in vals])
-    ax.set_xlabel('Percentage of Interracial Marriage as Fraction of Random Marriages')
+    ax.bar(data['class'][1::2], data['normalized'][1::2])
+    vals = ax.get_yticks()
+
+    ax.set_yticklabels(['{:3.0f}%'.format(x * 100) for x in vals])
     ax.spines['left'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
-    fig.savefig('bar.png', dpi=300)
+    # fig.savefig('bar.png',dpi=300)
+
+
+    ax0.bar(data['class'][::2], data['normalized'][::2], color="#FF8888")
+    vals = ax0.get_yticks()
+
+    ax0.set_yticklabels(['{:3.0f}%'.format(x * 100) for x in vals])
+    ax0.spines['left'].set_visible(False)
+    ax0.spines['bottom'].set_visible(False)
+    fig.savefig('bar.png')
+
 
 if __name__ == "__main__":
 
