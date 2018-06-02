@@ -38,7 +38,7 @@ filter.append("feColorMatrix")
     .attr("class", "blurValues")
     .attr("in","blur")
     .attr("mode","matrix")
-    .attr("values","1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9")
+    .attr("values","1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -6")
     .attr("result","gooey");
 filter.append("feBlend")
     .attr("in2","SourceGraphic")
@@ -150,6 +150,34 @@ var maxRadius = d3.max(populations, function(d) { return d.radius; });
 var defs = svg.append("defs");
 var linearGradient = defs.append("linearGradient")
     .attr("id", "linear-gradient");
+var x = d3.scale.linear()
+    .domain([1,3500])
+    .range([width/4, 3*width/4]);
+
+var y = d3.scale.linear()
+    .domain([40,0])
+    .range([height/4, 3*height/4]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+var xlabel=svg.append("g")
+  .attr("class", "x axis")
+  .attr("transform", "translate(0," + 3*height/4 + ")")
+  .call(xAxis)
+  .style("opacity", 0);
+
+
+
+var ylabel=svg.append("g")
+  .attr("class", "y axis")
+  .attr("transform", "translate("+width/4+ ",0)")
+  .call(yAxis)
+  .style("opacity", 0);
 
 //Set the color for the start (0%)
 linearGradient.append("stop")
@@ -210,7 +238,8 @@ setInterval(loop, 18000);
 function loop() {
     placeCities();
     setTimeout(colorairports,5000);
-    setTimeout(clusterCountry, 10000);
+    setTimeout(corrleation, 10000);
+//    setTimeout(clusterCountry, 10000);
     setTimeout(backToCenter, 15000);
 }//loop
 
@@ -253,7 +282,7 @@ function placeCities () {
     d3.selectAll(".blurValues")
         .transition().duration(4000)
         .attrTween("values", function() {
-            return d3.interpolateString("1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -5",
+            return d3.interpolateString("1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 45 -6",
                                         "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 6 -5");
         });
 
@@ -282,6 +311,39 @@ function colorairports(){
 
 
 }
+
+function corrleation() {
+
+    ///Start force again
+//    force.start();
+    xlabel.transition().duration(2000).style("opacity", 1.0);
+    ylabel.transition().duration(2000).style("opacity", 1.0);
+
+    //Dim the map
+    d3.selectAll(".geo-path")
+        .transition().duration(1000)
+        .style("stroke-opacity", 0);
+
+
+//    d3.selectAll(".blurValues")
+//        .transition().duration(0)
+//        .attrTween("values", function() {
+//            return d3.interpolateString("1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 6 -5",
+//                                        "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -6");
+//        });
+    //Move the cities to the corrlation coordinates
+    d3.selectAll(".cities")
+        .transition("move").duration(1000)
+        .attr("cx", function(d,i) { return x(d.population)})
+        .attr("cy", function(d,i) { return y(d.percentage)});
+//        .attr("cx", function(d,i) { return width/4+width/2*Math.sqrt(d.population)/200})
+//        .attr("cy", function(d,i) { return height/4+height/2*d.percentage/30});
+//        .style("opacity", 0.8);
+
+    //Reset gooey filter values back to a visible "gooey" effect
+
+
+}//correlation
 //
 //Cluster all the cities based on the country
 function clusterCountry() {
@@ -316,9 +378,11 @@ function clusterCountry() {
 
 //Move the circles back to the center location again
 function backToCenter () {
+    xlabel.transition().duration(1000).style("opacity", 0);
+    ylabel.transition().duration(1000).style("opacity", 0);
 
     //Stop the force layout
-    force.stop();
+//    force.stop();
     legend.transition().duration(1000).style("opacity", 0);
     startlegend.transition().duration(2000).style("opacity", 0);
     endlegend.transition().duration(2000).style("opacity", 0);
