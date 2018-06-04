@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
 plt.style.use('rossidata')
 from colour import Color
 
@@ -40,18 +41,28 @@ def main():
 
     ### Worst airports bars
 
+    ### to d3.js bar chart
+    a=df_['late']
+    b=df_['observations']
+    df_['percentage']=np.divide(a, b, out=np.zeros_like(a), where=b!=0)* 100
 
-    worst_bylate=df_.sort_values(by='late',ascending=[False]).iloc[0:11]
+    worst_bylate = df_.sort_values(by='late',ascending=[False]).iloc[0:11]
+    worst_bylate=worst_bylate.iloc[::-1]
+    worst_bylate.to_csv('data.tsv',sep='\t', quoting=csv.QUOTE_NONE)
 
+    # We're only going to consider large airports
+    worst_bypercentage = df_[df_['observations']>1000].sort_values(by='percentage',ascending=[False]).iloc[0:11]
+    worst_bypercentage=worst_bypercentage.iloc[::-1]
+    worst_bypercentage.to_csv('data2.tsv',sep='\t', quoting=csv.QUOTE_NONE)
 
     plt.close('all')
     fig,ax=plt.subplots()
     objects = worst_bylate['late']
     y_pos = np.arange(len(objects))
 
-    ax.bar(y_pos * 1.5 + 1, objects[::-1], align='center', color=["turquoise"])
+    ax.bar(y_pos * 1.5 + 1, objects, align='center', color=["turquoise"])
     ax.set_xticks(y_pos * 1.5 + 1)
-    ax.set_xticklabels(worst_bylate['airport'][::-1])
+    ax.set_xticklabels(worst_bylate['airport'])
     # ax.set_xlim([0, 45])
     plt.xticks(rotation=-270)
 
