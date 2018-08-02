@@ -19,3 +19,8 @@ A d3.js visulazation remixing some pew research data showing which groups are mo
 A python visulaization showing jazz greats that died sooner than the life-expectancy average of the year they were born in (data grabbed from wikipedia)
 ![Jazz Greats](jazz/jazzgreats.png)
 
+
+## Housing Crisis:
+Using the [survey of consumer finances](https://www.federalreserve.gov/econres/scfindex.htm) I plotted the winners and loser of the financial crisis. Generally, the rich did well and the poor did badly because of how they they keep their wealth.
+![Jazz Greats](housing_crisis/figures/housing.gif)
+
