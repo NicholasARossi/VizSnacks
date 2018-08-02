@@ -15,3 +15,7 @@ A python based stackchart using data from [here](https://www.kaggle.com/gregorut
 A d3.js visulazation remixing some pew research data showing which groups are most likely to be in an interracial marriage normalized by the size of that group.
 ![Interracial Marriage](IR_marriage/interracial.png)
 
+## Jazz Greats:
+A python visulaization showing jazz greats that died sooner than the life-expectancy average of the year they were born in (data grabbed from wikipedia)
+![Jazz Greats](jazz/jazzgreats.png)
+
